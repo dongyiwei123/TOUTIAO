@@ -1,0 +1,83 @@
+<template>
+  <div class="user">
+    <myHeader>个人中心</myHeader>
+    <div class="header" @click="$router.push('/UserEdit')">
+      <img :src="$axios.defaults.baseURL + info.head_img" alt />
+      <div class="content">
+        <div class="detail">
+          <span class="iconfont iconxingbienan" v-if="info.gender === 1"></span>
+          <span class="iconfont iconxingbienv" v-else></span>
+          <span>{{ info.nickname }}</span>
+        </div>
+        <div class="time">{{ info.create_date | time }}</div>
+      </div>
+      <span class="iconfont iconjiantou1"></span>
+    </div>
+    <div class="main">
+      <navBar>
+        <template>我的关注</template>
+        <template #content>关注的用户</template>
+      </navBar>
+      <navBar>
+        <template>我的跟帖</template>
+        <template #content>跟帖/回复</template>
+      </navBar>
+      <navBar>
+        <template>我的收藏</template>
+        <template #content>视频/关注</template>
+      </navBar>
+      <navBar @click="$router.push('/UserEdit')">设置</navBar>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      info: ''
+    }
+  },
+  async created() {
+    const id = this.$route.query.id
+    const res = await this.$axios.get(`/user/${id}`)
+    // console.log(res)
+    const { data, message, statusCode } = res.data
+    if (statusCode === 200) {
+      this.info = data
+      console.log(message)
+      console.log(this.info)
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+.header {
+  height: 130px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 16px;
+  box-shadow: 0 3px 2px #ccc;
+  > img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+  }
+  .content {
+    flex: 1;
+    margin-left: 10px;
+    .iconfont {
+      margin-right: 5px;
+    }
+    .time {
+      color: #999;
+    }
+  }
+}
+.main {
+  padding-left: 15px;
+}
+</style>

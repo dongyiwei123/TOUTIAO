@@ -6,12 +6,7 @@
     <myLoge></myLoge>
     <!-- 输入框 -->
     <van-form @submit="onSubmit">
-      <van-field
-        v-model="username"
-        label="用户名"
-        placeholder="用户名"
-        :rules="rules.nameRule"
-      />
+      <van-field v-model="username" label="用户名" placeholder="用户名" :rules="rules.nameRule" />
       <van-field
         v-model="password"
         type="password"
@@ -20,13 +15,12 @@
         :rules="rules.psdRule"
       />
       <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit">
-          提交
-        </van-button>
+        <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
     </van-form>
     <p class="tips">
-      没有账号？去<router-link to="/Register">注册</router-link>
+      没有账号？去
+      <router-link to="/Register">注册</router-link>
     </p>
   </div>
 </template>
@@ -46,7 +40,7 @@ export default {
           },
           {
             pattern: /^\d{5,11}$/,
-            message: '字母开头，允许5-16字节，允许字母数字下划线组合',
+            message: '允许5-11字节',
             trigger: 'onChange'
           }
         ],
@@ -59,7 +53,7 @@ export default {
           {
             pattern: /^\w{3,9}$/,
             message:
-              '最少6位，包括至少1个大写字母，1个小写字母，1个数字，1个特殊字符',
+              '3-9',
             trigger: 'onChange'
           }
         ]
@@ -72,9 +66,15 @@ export default {
         username: this.username,
         password: this.password
       })
-      if (res.data.statusCode === 200) {
-        this.$router.push('/')
-        localStorage.setItem('token', res.data.token)
+      const { statusCode, data } = res.data
+      if (statusCode === 200) {
+        this.$router.push({
+          path: '/User',
+          query: {
+            id: data.user.id
+          }
+        })
+        window.localStorage.setItem('token', data.token)
         this.$toast.success('登录成功')
       } else {
         this.$toast.fail('登录失败')
