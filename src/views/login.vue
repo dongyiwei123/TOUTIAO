@@ -68,13 +68,15 @@ export default {
       })
       const { statusCode, data } = res.data
       if (statusCode === 200) {
-        this.$router.push({
-          path: '/User',
-          query: {
-            id: data.user.id
-          }
-        })
+        // this.$router.push({
+        //   path: '/User',
+        //   query: {
+        //     id: data.user.id
+        //   }
+        // })
+        this.$router.push('/User')
         window.localStorage.setItem('token', data.token)
+        window.localStorage.setItem('userId', data.user.id)
         this.$toast.success('登录成功')
       } else {
         this.$toast.fail('登录失败')

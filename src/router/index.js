@@ -5,6 +5,10 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/',
+    component: () => import('../views/login.vue')
+  },
+  {
     path: '/Login',
     name: 'Login',
     component: () => import('../views/login.vue')

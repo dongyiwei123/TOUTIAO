@@ -5,8 +5,8 @@
       <img :src="$axios.defaults.baseURL + info.head_img" alt />
       <div class="content">
         <div class="detail">
-          <span class="iconfont iconxingbienan" v-if="info.gender === 1"></span>
-          <span class="iconfont iconxingbienv" v-else></span>
+          <span style="color:blue" class="iconfont iconxingbienan" v-if="info.gender === 1"></span>
+          <span style="color:red" class="iconfont iconxingbienv" v-else></span>
           <span>{{ info.nickname }}</span>
         </div>
         <div class="time">{{ info.create_date | time }}</div>
@@ -27,6 +27,7 @@
         <template #content>视频/关注</template>
       </navBar>
       <navBar @click="$router.push('/UserEdit')">设置</navBar>
+      <navBar @click="edit">退出</navBar>
     </div>
   </div>
 </template>
@@ -39,14 +40,28 @@ export default {
     }
   },
   async created() {
-    const id = this.$route.query.id
+    const id = window.localStorage.getItem('userId')
     const res = await this.$axios.get(`/user/${id}`)
     // console.log(res)
-    const { data, message, statusCode } = res.data
+    const { data, statusCode } = res.data
     if (statusCode === 200) {
       this.info = data
-      console.log(message)
-      console.log(this.info)
+    }
+  },
+  methods: {
+    async edit() {
+      try {
+        await this.$dialog.confirm({
+          title: '温馨提示',
+          message: '是否确认退出'
+        })
+        window.localStorage.removeItem('token')
+        window.localStorage.removeItem('userId')
+        this.$router.push('/Login')
+        this.$toast.success('退出成功')
+      } catch (e) {
+        this.$toast.success('取消退出')
+      }
     }
   }
 }

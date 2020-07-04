@@ -3,7 +3,7 @@ import App from './App.vue'
 import axios from 'axios'
 import router from './router'
 import moment from 'moment'
-import { Field, Button, Form, Toast } from 'vant'
+import './vants/vants'
 import 'amfe-flexible'
 
 import './styles/css/base.css'
@@ -32,19 +32,15 @@ axios.interceptors.request.use(function(config) {
 // 添加响应拦截器
 axios.interceptors.response.use(function(res) {
   const { statusCode, message } = res.data
-  console.log(res)
+  // console.log(res)
   if ((statusCode === 401) & (message === '用户信息验证失败')) {
-    Toast.fail(message)
+    this.$toast.fail(message)
     window.localStorage.removeItem('token')
+    window.localStorage.removeItem('userId')
     router.push('/Login')
   }
   return res
 })
-// 使用vant组件
-Vue.use(Field)
-Vue.use(Button)
-Vue.use(Form)
-Vue.use(Toast)
 
 Vue.component('myHeader', myHeader)
 Vue.component('myLoge', myLoge)
