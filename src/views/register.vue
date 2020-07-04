@@ -3,18 +3,8 @@
     <myHeader>注册</myHeader>
     <myLoge></myLoge>
     <van-form @submit="onSubmit">
-      <van-field
-        v-model="user.username"
-        label="用户名"
-        placeholder="用户名"
-        :rules="rules.nameRule"
-      />
-      <van-field
-        v-model="user.nickname"
-        label="昵称"
-        placeholder="昵称"
-        :rules="rules.nickRule"
-      />
+      <van-field v-model="user.username" label="用户名" placeholder="用户名" :rules="rules.nameRule" />
+      <van-field v-model="user.nickname" label="昵称" placeholder="昵称" :rules="rules.nickRule" />
       <van-field
         v-model="user.password"
         type="password"
@@ -23,12 +13,13 @@
         :rules="rules.psdRule"
       />
       <div style="margin: 16px;">
-        <van-button round block type="info" native-type="submit">
-          提交
-        </van-button>
+        <van-button round block type="info" native-type="submit">提交</van-button>
       </div>
     </van-form>
-    <p class="tips">已有账号？去<router-link to="/">登录</router-link></p>
+    <p class="tips">
+      已有账号？去
+      <router-link to="/">登录</router-link>
+    </p>
   </div>
 </template>
 

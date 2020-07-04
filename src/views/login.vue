@@ -39,7 +39,7 @@ export default {
             trigger: 'onChange'
           },
           {
-            pattern: /^\d{5,11}$/,
+            pattern: /^\w{5,11}$/,
             message: '允许5-11字节',
             trigger: 'onChange'
           }

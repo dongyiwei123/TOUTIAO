@@ -36,11 +36,11 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   const token = window.localStorage.getItem('token')
   // console.log(token)
-  if (to.path === '/user') {
+  if (to.path === ('/user' || 'userEdit')) {
     if (token) {
       next()
     } else {
-      next('/Login')
+      router.push('/Login')
     }
   }
   next()
