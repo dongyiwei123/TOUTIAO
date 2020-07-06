@@ -27,6 +27,16 @@ const routes = [
     path: '/UserEdit',
     name: 'UserEdit',
     component: () => import('../views/userEdit.vue')
+  },
+  {
+    path: '/myFollow',
+    name: 'myFollow',
+    component: () => import('../views/myFollow.vue')
+  },
+  {
+    path: '/myComment',
+    name: 'myComment',
+    component: () => import('../views/myComment.vue')
   }
 ]
 

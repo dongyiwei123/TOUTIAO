@@ -2,7 +2,7 @@
   <div class="userEdit">
     <myHeader>编辑资料</myHeader>
     <div class="avator">
-      <img :src="$axios.defaults.baseURL+user.head_img" alt />
+      <img :src="$axios.defaults.baseURL + user.head_img" alt />
       <!-- 上传 -->
       <van-uploader :after-read="afterRead" />
     </div>
@@ -10,7 +10,7 @@
       <!-- 昵称 -->
       <navBar @click="nicknameFn">
         <template>昵称</template>
-        <template #content>{{user.nickname}}</template>
+        <template #content>{{ user.nickname }}</template>
       </navBar>
       <!-- 密码 -->
       <navBar @click="passwordFn">
@@ -20,23 +20,38 @@
       <!-- 性别 -->
       <navBar @click="genderFn">
         <template>性别</template>
-        <template #content>{{user.gender===1?'男':'女'}}</template>
+        <template #content>{{ user.gender === 1 ? '男' : '女' }}</template>
       </navBar>
 
       <!-- 昵称弹出框 -->
-      <van-dialog v-model="showNickName" title="修改昵称" show-cancel-button @confirm="editNickName">
+      <van-dialog
+        v-model="showNickName"
+        title="修改昵称"
+        show-cancel-button
+        @confirm="editNickName"
+      >
         <van-cell-group>
           <van-field v-model="nickname" placeholder="请输入昵称" />
         </van-cell-group>
       </van-dialog>
       <!-- 密码弹出框 -->
-      <van-dialog v-model="showPsd" title="修改密码" show-cancel-button @confirm="editPsd">
+      <van-dialog
+        v-model="showPsd"
+        title="修改密码"
+        show-cancel-button
+        @confirm="editPsd"
+      >
         <van-cell-group>
           <van-field v-model="password" placeholder="请输入昵称" />
         </van-cell-group>
       </van-dialog>
       <!-- 性别弹出框 -->
-      <van-dialog v-model="showGender" title="修改性别" show-cancel-button @confirm="editGender">
+      <van-dialog
+        v-model="showGender"
+        title="修改性别"
+        show-cancel-button
+        @confirm="editGender"
+      >
         <van-radio-group v-model="gender">
           <van-cell-group>
             <van-cell title="男" clickable @click="gender = 1">
@@ -53,11 +68,29 @@
         </van-radio-group>
       </van-dialog>
     </div>
+    <div class="mask" v-if="isShow">
+      <van-icon name="success" @click="crop" />
+      <van-icon name="cross" @click="cancel" />
+      <vueCropper
+        ref="cropper"
+        :img="imgUrl"
+        autoCrop
+        autoCropWidth="150px"
+        autoCropHeight="150px"
+        fixed
+        :fixedNumber="[1, 1]"
+      >
+      </vueCropper>
+    </div>
   </div>
 </template>
 
 <script>
+import { VueCropper } from 'vue-cropper'
 export default {
+  components: {
+    VueCropper
+  },
   data() {
     return {
       user: {},
@@ -66,7 +99,9 @@ export default {
       showPsd: false,
       password: '',
       showGender: false,
-      gender: 1
+      gender: 1,
+      isShow: false,
+      imgUrl: ''
     }
   },
   created() {
@@ -124,18 +159,40 @@ export default {
       })
     },
     // 上传
-    async afterRead(file) {
-      // 此时可以自行将文件上传至服务器
-      // console.log(file.file)
-      const db = new FormData()
-      db.append('file', file.file)
-      const { data: res } = await this.$axios.post('/upload', db)
-      if (res.statusCode === 200) {
-        // console.log(res)
-        this.userEdit({
-          head_img: res.data.url
-        })
-      }
+    afterRead(file) {
+      // if (file.file.size > 1024 * 20) return this.$toast.fail('图片需小于20kb')
+      // if (file.file.name.split('.')[1] !== ('jpg' || 'png' || 'gif')) {
+      //   return this.$toast.fail('图片格式为jpg/png/gif')
+      // }
+      // const db = new FormData()
+      // db.append('file', file.file)
+      // const { data: res } = await this.$axios.post('/upload', db)
+      // if (res.statusCode === 200) {
+      //   // console.log(res)
+      //   this.userEdit({
+      //     head_img: res.data.url
+      //   })
+      // }
+      this.isShow = true
+      this.imgUrl = file.content
+    },
+    crop() {
+      // 获取截图的blob数据
+      this.$refs.cropper.getCropBlob(async data => {
+        const db = new FormData()
+        db.append('file', data)
+        const { data: res } = await this.$axios.post('/upload', db)
+        if (res.statusCode === 200) {
+          // console.log(res)
+          this.userEdit({
+            head_img: res.data.url
+          })
+          this.isShow = false
+        }
+      })
+    },
+    cancel() {
+      this.isShow = false
     }
   }
 }
@@ -167,6 +224,26 @@ export default {
     }
     .van-cell-group {
       border: 1px solid #999;
+    }
+  }
+  .mask {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    .van-icon {
+      position: absolute;
+      color: #000;
+      font-size: 30px;
+      z-index: 999;
+      &:nth-child(1) {
+        left: 0;
+      }
+      &:nth-child(2) {
+        right: 0;
+      }
     }
   }
 }

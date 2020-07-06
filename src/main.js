@@ -23,7 +23,9 @@ import {
   Cell,
   Radio,
   RadioGroup,
-  Uploader
+  Uploader,
+  Icon,
+  List
 } from 'vant'
 
 // 使用vant组件
@@ -37,10 +39,12 @@ Vue.use(Cell)
 Vue.use(Radio)
 Vue.use(RadioGroup)
 Vue.use(Uploader)
+Vue.use(Icon)
+Vue.use(List)
 
 Vue.config.productionTip = false
-Vue.filter('time', input => {
-  return moment(input).format('YYYY-MM-DD')
+Vue.filter('time', (input, style = 'YYYY-MM-DD') => {
+  return moment(input).format(style)
 })
 // axios优化
 Vue.prototype.$axios = axios
