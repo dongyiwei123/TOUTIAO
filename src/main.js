@@ -49,6 +49,13 @@ Vue.filter('time', (input, style = 'YYYY-MM-DD') => {
 // axios优化
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://127.0.0.1:3000'
+Vue.prototype.$url = function(url) {
+  if (url.startsWith('http')) {
+    return url
+  } else {
+    return axios.defaults.baseURL + url
+  }
+}
 // 添加请求拦截器
 axios.interceptors.request.use(function(config) {
   const token = window.localStorage.getItem('token')

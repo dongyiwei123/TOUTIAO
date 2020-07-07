@@ -5,11 +5,7 @@
       <img :src="$axios.defaults.baseURL + info.head_img" alt />
       <div class="content">
         <div class="detail">
-          <span
-            style="color:blue"
-            class="iconfont iconxingbienan"
-            v-if="info.gender === 1"
-          ></span>
+          <span style="color:blue" class="iconfont iconxingbienan" v-if="info.gender === 1"></span>
           <span style="color:red" class="iconfont iconxingbienv" v-else></span>
           <span>{{ info.nickname }}</span>
         </div>
@@ -26,7 +22,7 @@
         <template>我的跟帖</template>
         <template #content>跟帖/回复</template>
       </navBar>
-      <navBar>
+      <navBar @click="$router.push('/myStar')">
         <template>我的收藏</template>
         <template #content>视频/关注</template>
       </navBar>

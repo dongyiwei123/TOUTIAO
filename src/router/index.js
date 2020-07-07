@@ -37,6 +37,11 @@ const routes = [
     path: '/myComment',
     name: 'myComment',
     component: () => import('../views/myComment.vue')
+  },
+  {
+    path: '/myStar',
+    name: 'myStar',
+    component: () => import('../views/myStar.vue')
   }
 ]
 
