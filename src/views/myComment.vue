@@ -9,14 +9,14 @@
       :immediate-check="false"
     >
       <div class="comment" v-for="item in list" :key="item.id">
-        <p class="time">{{ item.create_date | time('YYYY-MM-DD hh:ss') }}</p>
+        <p class="time">{{ item.create_date | time('YYYY-MM-DD HH:mm') }}</p>
         <div class="father" v-if="item.parent">
           <p class="reply">回复: &nbsp;{{ item.parent.user.nickname }}</p>
           <p>{{ item.parent.content }}</p>
         </div>
         <div class="oneComment">{{ item.content }}</div>
         <div class="article one-txt-cut">
-          <router-link to="#"> 原文: &nbsp;{{ item.post.title }} </router-link>
+          <router-link to="#">原文: &nbsp;{{ item.post.title }}</router-link>
         </div>
         <span class="iconfont iconjiantou1"></span>
       </div>
@@ -48,11 +48,18 @@ export default {
       })
       const { statusCode, data } = res
       if (statusCode === 200) {
-        this.list = data
-        // console.log(this.list)
+        // this.list = [...this.list, ...data]
+        this.list = this.list.concat(data)
+        this.pageIndex++
+        this.loading = false
+        if (data.length < this.pageSize) {
+          this.finished = true
+        }
       }
     },
-    onLoad() {}
+    onLoad() {
+      this.getComments()
+    }
   }
 }
 </script>
