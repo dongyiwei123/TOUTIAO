@@ -13,6 +13,7 @@ import './styles/less/iconfont.less'
 import myLoge from './components/myLoge.vue'
 import myHeader from './components/myHeader.vue'
 import navBar from './components/navBar.vue'
+import myNew from './components/myNew.vue'
 import {
   Field,
   Button,
@@ -25,7 +26,9 @@ import {
   RadioGroup,
   Uploader,
   Icon,
-  List
+  List,
+  Tab,
+  Tabs
 } from 'vant'
 
 // 使用vant组件
@@ -41,6 +44,8 @@ Vue.use(RadioGroup)
 Vue.use(Uploader)
 Vue.use(Icon)
 Vue.use(List)
+Vue.use(Tab)
+Vue.use(Tabs)
 
 Vue.config.productionTip = false
 Vue.filter('time', (input, style = 'YYYY-MM-DD') => {
@@ -49,6 +54,7 @@ Vue.filter('time', (input, style = 'YYYY-MM-DD') => {
 // axios优化
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://127.0.0.1:3000'
+// 图片链接
 Vue.prototype.$url = function(url) {
   if (url.startsWith('http')) {
     return url
@@ -81,6 +87,7 @@ axios.interceptors.response.use(function(res) {
 Vue.component('myHeader', myHeader)
 Vue.component('myLoge', myLoge)
 Vue.component('navBar', navBar)
+Vue.component('myNew', myNew)
 
 new Vue({
   router,

@@ -1,18 +1,7 @@
 <template>
   <div class="myStar">
     <myHeader>我的收藏</myHeader>
-    <div class="star" v-for="item in list" :key="item.id">
-      <div class="right">
-        <p>{{item.title}}</p>
-        <div class="reply">
-          <span>{{item.user.nickname}}</span>
-          <span>{{item.comments.length}}跟帖</span>
-        </div>
-      </div>
-      <div class="left">
-        <img :src="$url(item.cover[0].url)" alt />
-      </div>
-    </div>
+    <myNew :post="list"></myNew>
   </div>
 </template>
 
@@ -39,33 +28,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.myStar {
-  .star {
-    display: flex;
-    padding: 10px;
-    border-bottom: 1px solid #999;
-    font-size: 16px;
-    color: #000;
-    .right {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      .reply {
-        font-size: 14px;
-        color: #999;
-        > span {
-          margin-right: 10px;
-        }
-      }
-    }
-    .left {
-      img {
-        width: 121px;
-        height: 75px;
-        object-fit: cover;
-      }
-    }
-  }
-}
 </style>

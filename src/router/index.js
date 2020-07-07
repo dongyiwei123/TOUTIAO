@@ -6,7 +6,8 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    component: () => import('../views/login.vue')
+    name: 'Home',
+    component: () => import('../views/Home.vue')
   },
   {
     path: '/Login',
@@ -48,10 +49,11 @@ const routes = [
 const router = new VueRouter({
   routes
 })
+const pages = ['/user', '/userEdit', '/myFollow', '/myComment', '/myStar']
 router.beforeEach((to, from, next) => {
   const token = window.localStorage.getItem('token')
   // console.log(token)
-  if (to.path === ('/user' || 'userEdit')) {
+  if (pages.includes(to.path)) {
     if (token) {
       next()
     } else {
