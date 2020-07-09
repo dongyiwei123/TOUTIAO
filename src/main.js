@@ -28,7 +28,8 @@ import {
   Icon,
   List,
   Tab,
-  Tabs
+  Tabs,
+  PullRefresh
 } from 'vant'
 
 // 使用vant组件
@@ -46,7 +47,7 @@ Vue.use(Icon)
 Vue.use(List)
 Vue.use(Tab)
 Vue.use(Tabs)
-
+Vue.use(PullRefresh)
 Vue.config.productionTip = false
 Vue.filter('time', (input, style = 'YYYY-MM-DD') => {
   return moment(input).format(style)

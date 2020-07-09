@@ -2,7 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
-
+// 防止点击登录按钮报错
+const VueRouterPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(to) {
+  return VueRouterPush.call(this, to).catch(err => err)
+}
 const routes = [
   {
     path: '/',
@@ -43,6 +47,11 @@ const routes = [
     path: '/myStar',
     name: 'myStar',
     component: () => import('../views/myStar.vue')
+  },
+  {
+    path: '/postDetail/:id',
+    name: 'postDetail',
+    component: () => import('../views/PostDetail.vue')
   }
 ]
 

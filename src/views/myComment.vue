@@ -8,7 +8,7 @@
       @load="onLoad"
       :immediate-check="false"
     >
-      <div class="comment" v-for="item in list" :key="item.id">
+      <div class="comment" v-for="(item,index) in list" :key="item.id">
         <p class="time">{{ item.create_date | time('YYYY-MM-DD HH:mm') }}</p>
         <div class="father" v-if="item.parent">
           <p class="reply">回复: &nbsp;{{ item.parent.user.nickname }}</p>
@@ -16,7 +16,7 @@
         </div>
         <div class="oneComment">{{ item.content }}</div>
         <div class="article one-txt-cut">
-          <router-link to="#">原文: &nbsp;{{ item.post.title }}</router-link>
+          <p @click="goDetail(index)">原文: &nbsp;{{ item.post.title }}</p>
         </div>
         <span class="iconfont iconjiantou1"></span>
       </div>
@@ -59,6 +59,9 @@ export default {
     },
     onLoad() {
       this.getComments()
+    },
+    goDetail(index) {
+      this.$router.push(`/postDetail/${this.list[index].post.id}`)
     }
   }
 }

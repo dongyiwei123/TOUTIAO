@@ -15,11 +15,13 @@
     <!-- tab栏 -->
     <nav class="category">
       <van-tabs v-model="active" sticky animated swipeable>
-        <!-- <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad"> -->
         <van-tab :title="item.name" v-for="item in categoryList" :key="item.id">
-          <myNew :post="postList"></myNew>
+          <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+              <myNew :post="postList" @click="goDetail"></myNew>
+            </van-list>
+          </van-pull-refresh>
         </van-tab>
-        <!-- </van-list> -->
       </van-tabs>
     </nav>
   </div>
@@ -32,11 +34,11 @@ export default {
       active: 0,
       categoryList: [],
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 5,
       postList: [],
-      total: '',
       loading: false,
-      finished: false
+      finished: false,
+      isLoading: false
     }
   },
   created() {
@@ -48,8 +50,7 @@ export default {
       const { statusCode, data } = res
       if (statusCode === 200) {
         this.categoryList = data
-        // console.log(this.categoryList)
-        this.getPostList(0)
+        this.getPostList(this.categoryList[0].id)
       }
     },
     async getPostList(id) {
@@ -61,18 +62,38 @@ export default {
         }
       })
       // console.log(res)
-      const { statusCode, data, total } = res
+      const { statusCode, data } = res
       if (statusCode === 200) {
-        this.postList = data
-        this.total = total
+        this.postList = [...this.postList, ...data]
+        this.loading = false
+        this.isLoading = false
+        if (this.pageSize > data) {
+          this.finished = true
+        }
       }
+    },
+    onLoad() {
+      // console.log(this.categoryList[0].id)
+      this.pageIndex++
+      this.getPostList(this.categoryList[this.active].id)
+    },
+    onRefresh() {
+      this.postList = []
+      this.pageIndex = 1
+      this.loading = true
+      this.finished = false
+      this.getPostList(this.categoryList[this.active].id)
+    },
+    goDetail(id) {
+      this.$router.push(`/postDetail/${id}`)
     }
-    // onLoad() {
-
-    // }
   },
   watch: {
     active(value) {
+      this.postList = []
+      this.pageIndex = 1
+      this.finished = false
+      this.loading = true
       const id = this.categoryList[value].id
       this.getPostList(id)
     }
@@ -80,7 +101,7 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .home {
   .header {
     display: flex;

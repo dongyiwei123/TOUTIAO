@@ -1,13 +1,24 @@
 <template>
   <div class="myNew">
-    <div class="new" v-for="item in post" :key="item.id">
+    <div class="new" v-for="item in post" :key="item.id" @click="$emit('click',item.id)">
+      <div class="video" v-if="item.type === 2">
+        <p>{{ item.title }}</p>
+        <div class="video_box">
+          <img :src="$url(item.cover[0].url)" alt />
+          <span class="iconfont iconshipin"></span>
+        </div>
+        <div class="reply">
+          <span>{{ item.user.nickname }}</span>
+          <span>{{ item.comment_length }}跟帖</span>
+        </div>
+      </div>
       <!-- 一张图 -->
-      <div class="singleStar" v-if="item.cover.length<3">
+      <div class="singleStar" v-else-if="item.cover.length < 3">
         <div class="right">
-          <p>{{item.title}}</p>
+          <p>{{ item.title }}</p>
           <div class="reply">
-            <span>{{item.user.nickname}}</span>
-            <span>{{item.comment_length}}跟帖</span>
+            <span>{{ item.user.nickname }}</span>
+            <span>{{ item.comment_length }}跟帖</span>
           </div>
         </div>
         <div class="left">
@@ -16,15 +27,15 @@
       </div>
       <!-- 多张图 -->
       <div class="multipleStar" v-else>
-        <p>{{item.title}}</p>
+        <p>{{ item.title }}</p>
         <div class="avator">
           <img :src="$url(item.cover[0].url)" alt />
           <img :src="$url(item.cover[1].url)" alt />
           <img :src="$url(item.cover[2].url)" alt />
         </div>
         <div class="reply">
-          <span>{{item.user.nickname}}</span>
-          <span>{{item.comment_length}}跟帖</span>
+          <span>{{ item.user.nickname }}</span>
+          <span>{{ item.comment_length }}跟帖</span>
         </div>
       </div>
     </div>
@@ -83,12 +94,36 @@ export default {
         object-fit: cover;
       }
     }
-    .reply {
-      font-size: 14px;
-      color: #999;
+  }
+  .video {
+    padding: 10px;
+    border-bottom: 1px solid #999;
+    font-size: 16px;
+    color: #000;
+    .video_box {
+      position: relative;
+      width: 100%;
       > span {
-        margin-right: 10px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 50px;
+        height: 50px;
+        background-color: rgba(0, 0, 0, 0.2);
+        text-align: center;
+        line-height: 50px;
+        font-size: 30px;
+        color: #fff;
+        border-radius: 50%;
       }
+    }
+  }
+  .reply {
+    font-size: 14px;
+    color: #999;
+    > span {
+      margin-right: 10px;
     }
   }
 }

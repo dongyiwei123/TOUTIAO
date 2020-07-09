@@ -77,13 +77,32 @@ export default {
     async onSubmit() {
       const res = await this.$axios.post('/register', this.user)
       if (res.data.statusCode === 200) {
-        this.$router.push({
-          name: 'Login',
-          params: {
-            username: this.user.username,
-            password: this.user.password
-          }
-        })
+        if (this.$route.query.id) {
+          this.$router.push({
+            name: 'Login',
+            params: {
+              username: this.user.username,
+              password: this.user.password,
+              id: this.$route.query.id,
+              register: true
+            }
+          })
+        } else {
+          this.$router.push({
+            name: 'Login',
+            params: {
+              username: this.user.username,
+              password: this.user.password
+            }
+          })
+        }
+        // this.$router.push({
+        //   name: 'Login',
+        //   params: {
+        //     username: this.user.username,
+        //     password: this.user.password
+        //   }
+        // })
         this.$toast.success(res.data.message)
       } else {
         this.$toast.fail(res.data.message)

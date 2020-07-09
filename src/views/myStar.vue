@@ -1,7 +1,7 @@
 <template>
   <div class="myStar">
     <myHeader>我的收藏</myHeader>
-    <myNew :post="list"></myNew>
+    <myNew :post="list" @click="getDetail"></myNew>
   </div>
 </template>
 
@@ -20,8 +20,14 @@ export default {
       const { data: res } = await this.$axios.get('/user_star')
       const { statusCode, data } = res
       if (statusCode === 200) {
+        data.forEach(item => {
+          item.comment_length = item.comments.length
+        })
         this.list = data
       }
+    },
+    getDetail(id) {
+      this.$router.push(`/postDetail/${id}`)
     }
   }
 }
