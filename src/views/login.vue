@@ -74,8 +74,10 @@ export default {
         //     id: data.user.id
         //   }
         // })
+        // 从详情页过来
         if (this.$route.query.back === true) {
           this.$router.back()
+          // 从注册页过来
         } else if (this.$route.params.register === true) {
           this.$router.push(`/postDetail/${this.$route.params.id}`)
         } else {
@@ -89,6 +91,7 @@ export default {
         this.$toast.fail('登录失败')
       }
     },
+    // 给注册注册点击事件并传递详情页id
     isFollow() {
       if (this.$route.query.back === true) {
         this.$router.push({

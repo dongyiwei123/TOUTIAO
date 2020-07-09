@@ -77,6 +77,7 @@ export default {
     async onSubmit() {
       const res = await this.$axios.post('/register', this.user)
       if (res.data.statusCode === 200) {
+        // 接受登录页传过来的详情页id,注册成功后再将id传给登录页
         if (this.$route.query.id) {
           this.$router.push({
             name: 'Login',
