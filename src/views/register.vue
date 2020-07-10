@@ -18,7 +18,7 @@
     </van-form>
     <p class="tips">
       已有账号？去
-      <router-link to="/">登录</router-link>
+      <router-link to="/Login">登录</router-link>
     </p>
   </div>
 </template>
@@ -77,33 +77,13 @@ export default {
     async onSubmit() {
       const res = await this.$axios.post('/register', this.user)
       if (res.data.statusCode === 200) {
-        // 接受登录页传过来的详情页id,注册成功后再将id传给登录页
-        if (this.$route.query.id) {
-          this.$router.push({
-            name: 'Login',
-            params: {
-              username: this.user.username,
-              password: this.user.password,
-              id: this.$route.query.id,
-              register: true
-            }
-          })
-        } else {
-          this.$router.push({
-            name: 'Login',
-            params: {
-              username: this.user.username,
-              password: this.user.password
-            }
-          })
-        }
-        // this.$router.push({
-        //   name: 'Login',
-        //   params: {
-        //     username: this.user.username,
-        //     password: this.user.password
-        //   }
-        // })
+        this.$router.push({
+          name: 'Login',
+          params: {
+            username: this.user.username,
+            password: this.user.password
+          }
+        })
         this.$toast.success(res.data.message)
       } else {
         this.$toast.fail(res.data.message)

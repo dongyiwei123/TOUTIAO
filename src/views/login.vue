@@ -20,7 +20,7 @@
     </van-form>
     <p class="tips">
       没有账号？去
-      <span @click="isFollow">注册</span>
+      <router-link to="/Register" @click="isFollow">注册</router-link>
     </p>
   </div>
 </template>
@@ -75,15 +75,13 @@ export default {
         //   }
         // })
         // 从详情页过来
-        if (this.$route.query.back === true) {
-          this.$router.back()
-          // 从注册页过来
-        } else if (this.$route.params.register === true) {
-          this.$router.push(`/postDetail/${this.$route.params.id}`)
+        const routeUrl = localStorage.getItem('routeUrl')
+        if (routeUrl) {
+          this.$router.push(routeUrl)
+          localStorage.removeItem('routeUrl')
         } else {
           this.$router.push('/User')
         }
-
         window.localStorage.setItem('token', data.token)
         window.localStorage.setItem('userId', data.user.id)
         this.$toast.success('登录成功')

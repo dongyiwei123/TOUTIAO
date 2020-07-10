@@ -57,6 +57,7 @@ export default {
         })
         window.localStorage.removeItem('token')
         window.localStorage.removeItem('userId')
+        localStorage.removeItem('routeUrl')
         this.$router.push('/Login')
         this.$toast.success('退出成功')
       } catch (e) {

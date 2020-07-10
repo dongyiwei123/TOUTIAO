@@ -14,6 +14,7 @@ import myLoge from './components/myLoge.vue'
 import myHeader from './components/myHeader.vue'
 import navBar from './components/navBar.vue'
 import myNew from './components/myNew.vue'
+import comment from './components/comment.vue'
 import {
   Field,
   Button,
@@ -32,6 +33,13 @@ import {
   PullRefresh
 } from 'vant'
 
+// 注册组件
+Vue.component('myHeader', myHeader)
+Vue.component('myLoge', myLoge)
+Vue.component('navBar', navBar)
+Vue.component('myNew', myNew)
+Vue.component('comment', comment)
+
 // 使用vant组件
 Vue.use(Field)
 Vue.use(Button)
@@ -49,9 +57,15 @@ Vue.use(Tab)
 Vue.use(Tabs)
 Vue.use(PullRefresh)
 Vue.config.productionTip = false
+// 过滤器
+moment.locale('zh-CN')
 Vue.filter('time', (input, style = 'YYYY-MM-DD') => {
   return moment(input).format(style)
 })
+Vue.filter('fromNow', input => {
+  return moment(input).fromNow()
+})
+
 // axios优化
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://127.0.0.1:3000'
@@ -84,11 +98,6 @@ axios.interceptors.response.use(function(res) {
   }
   return res
 })
-
-Vue.component('myHeader', myHeader)
-Vue.component('myLoge', myLoge)
-Vue.component('navBar', navBar)
-Vue.component('myNew', myNew)
 
 new Vue({
   router,

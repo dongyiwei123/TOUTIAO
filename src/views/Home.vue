@@ -64,6 +64,9 @@ export default {
       // console.log(res)
       const { statusCode, data } = res
       if (statusCode === 200) {
+        if (this.pageIndex === 1) {
+          this.postList = []
+        }
         this.postList = [...this.postList, ...data]
         this.loading = false
         this.isLoading = false
