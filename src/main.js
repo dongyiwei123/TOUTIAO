@@ -30,7 +30,8 @@ import {
   List,
   Tab,
   Tabs,
-  PullRefresh
+  PullRefresh,
+  Sticky
 } from 'vant'
 
 // 注册组件
@@ -56,6 +57,7 @@ Vue.use(List)
 Vue.use(Tab)
 Vue.use(Tabs)
 Vue.use(PullRefresh)
+Vue.use(Sticky)
 Vue.config.productionTip = false
 // 过滤器
 moment.locale('zh-CN')
@@ -65,6 +67,8 @@ Vue.filter('time', (input, style = 'YYYY-MM-DD') => {
 Vue.filter('fromNow', input => {
   return moment(input).fromNow()
 })
+const bus = new Vue()
+Vue.prototype.$bus = bus
 
 // axios优化
 Vue.prototype.$axios = axios

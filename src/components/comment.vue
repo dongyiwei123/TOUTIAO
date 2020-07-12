@@ -9,7 +9,7 @@
           <p>{{ comment.user.nickname }}</p>
           <p>{{ comment.create_date | fromNow }}</p>
         </div>
-        <span class="reply">回复</span>
+        <span class="reply" @click="reply(comment.id,comment.user.nickname)">回复</span>
       </div>
       <myFloor v-if="comment.parent" :comment="comment.parent" :num="getNum(1, comment.parent)"></myFloor>
       <div class="content">{{ comment.content }}</div>
@@ -34,6 +34,9 @@ export default {
       } else {
         return num
       }
+    },
+    reply(id, name) {
+      this.$bus.$emit('reply', id, name)
     }
   }
 }
@@ -71,6 +74,7 @@ export default {
     padding: 15px;
     border-bottom: 1px solid #999;
     font-size: 14px;
+    word-wrap: break-word;
   }
 }
 </style>

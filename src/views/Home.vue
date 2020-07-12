@@ -4,7 +4,7 @@
       <div class="loge">
         <span class="iconfont iconnew"></span>
       </div>
-      <div class="search">
+      <div class="search" @click="$router.push('/search')">
         <span class="iconfont iconsearch"></span>
         <span>搜索新闻</span>
       </div>
@@ -14,10 +14,17 @@
     </header>
     <!-- tab栏 -->
     <nav class="category">
+      <span class="iconfont iconicon-test" @click="$router.push('/category')"></span>
       <van-tabs v-model="active" sticky animated swipeable>
         <van-tab :title="item.name" v-for="item in categoryList" :key="item.id">
           <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-            <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+            <van-list
+              v-model="loading"
+              :finished="finished"
+              finished-text="没有更多了"
+              @load="onLoad"
+              :immediate-check="false"
+            >
               <myNew :post="postList" @click="goDetail"></myNew>
             </van-list>
           </van-pull-refresh>
@@ -29,6 +36,7 @@
 
 <script>
 export default {
+  name: 'home',
   data() {
     return {
       active: 0,
@@ -44,8 +52,17 @@ export default {
   created() {
     this.getCategoryList()
   },
+  activated() {
+    this.getCategoryList()
+  },
   methods: {
     async getCategoryList() {
+      const active = JSON.parse(localStorage.getItem('active'))
+      if (active) {
+        this.categoryList = active
+        this.getPostList(this.categoryList[0].id)
+        return
+      }
       const { data: res } = await this.$axios.get('/category')
       const { statusCode, data } = res
       if (statusCode === 200) {
@@ -144,9 +161,23 @@ export default {
       }
     }
   }
+  .van-tabs__wrap {
+    width: 90%;
+  }
   .category {
     /deep/ .van-tabs__line {
       background-color: pink;
+    }
+    .iconicon-test {
+      float: right;
+      width: 50px;
+      height: 44px;
+      position: sticky;
+      top: 0;
+      text-align: center;
+      line-height: 44px;
+      background-color: #fff;
+      z-index: 9999;
     }
   }
 }

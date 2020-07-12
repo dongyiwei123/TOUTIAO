@@ -9,7 +9,7 @@
         </div>
         <div class="time">{{comment.create_date | fromNow}}</div>
         <div class="reply">
-          <span>回复</span>
+          <span @click="reply(comment.id,comment.user.nickname)">回复</span>
         </div>
       </div>
       <div class="content">
@@ -25,6 +25,11 @@ export default {
   props: {
     comment: Object,
     num: Number
+  },
+  methods: {
+    reply(id, name) {
+      this.$bus.$emit('reply', id, name)
+    }
   }
 }
 </script>

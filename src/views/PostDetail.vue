@@ -30,26 +30,32 @@
     <!-- 评论区域 -->
     <div class="comment">
       <h3>精彩跟帖</h3>
-      <van-list
+      <!-- <van-list
         v-model="loading"
         :finished="finished"
         finished-text="没有更多了"
         @load="onLoad"
         :immediate-check="false"
-      >
-        <comment :comment="item" v-for="item in comment" :key="item.key"></comment>
-      </van-list>
+      >-->
+      <comment :comment="item" v-for="item in comment" :key="item.key"></comment>
+      <!-- </van-list> -->
     </div>
     <!-- 底部区域 -->
     <footer class="footer">
-      <div class="write">
-        <input type="text" placeholder="写跟贴" />
+      <div class="input" v-if="isShowInput">
+        <div class="write">
+          <input type="text" placeholder="写跟贴" @focus="focus" />
+        </div>
+        <span class="iconfont iconpinglun-">
+          <span>{{ postList.comment_length }}</span>
+        </span>
+        <span class="iconfont iconshoucang" @click="star" :class="{ active: postList.has_star }"></span>
+        <span class="iconfont iconfenxiang"></span>
       </div>
-      <span class="iconfont iconpinglun-">
-        <span>{{ postList.comment_length }}</span>
-      </span>
-      <span class="iconfont iconshoucang" @click="star" :class="{ active: postList.has_star }"></span>
-      <span class="iconfont iconfenxiang"></span>
+      <div class="textarea" v-else>
+        <textarea :placeholder="'回复:'+replynmae" @blur="blur" ref="textarea" v-model="myComment"></textarea>
+        <span @click="add">发表</span>
+      </div>
     </footer>
   </div>
 </template>
@@ -65,18 +71,29 @@ export default {
       loading: false,
       finished: false,
       pageIndex: 1,
-      pageSize: 2
+      pageSize: 5,
+      isShowInput: true,
+      myComment: '',
+      parent_id: '',
+      replynmae: ''
     }
   },
   created() {
     this.getList()
     this.getComment()
+    this.$bus.$on('reply', (id, name) => {
+      this.parent_id = id
+      this.replynmae = name
+      this.isShowInput = false
+      this.myComment = ''
+      this.$nextTick().then(() => { this.$refs.textarea.focus() }).catch(err => err)
+    })
   },
   beforeDestroy() {
     this.comment = []
-    this.pageIndex = 1
-    this.loading = true
-    this.finished = false
+    // this.pageIndex = 1
+    // this.loading = true
+    // this.finished = false
     // console.log(this.comment)
   },
   methods: {
@@ -152,29 +169,67 @@ export default {
     },
     async getComment() {
       const { data: res } = await this.$axios.get(
-        `/post_comment/${this.$route.params.id}`,
-        {
-          params: {
-            pageIndex: this.pageIndex,
-            pageSize: this.pageSize
-          }
-        }
-      )
+        `/post_comment/${this.$route.params.id}`)
+      // const { data: res } = await this.$axios.get(
+      //   `/post_comment/${this.$route.params.id}`,
+      //   {
+      //     params: {
+      //       pageIndex: this.pageIndex,
+      //       pageSize: this.pageSize
+      //     }
+      //   }
+      // )
       const { statusCode, data } = res
       if (statusCode === 200) {
-        console.log(this.comment)
-        // ----------------------------------------------------- 存在bug
-        this.comment = [...this.comment, ...data]
         // console.log(this.comment)
-        this.pageIndex++
-        this.loading = false
-        if (this.pageSize > data) {
-          this.finished = true
-        }
+        // this.comment = [...this.comment, ...data]
+        // this.comment = this.comment.concat(data)
+        this.comment = data
+        // console.log(this.comment)
+        // this.pageIndex++
+        // this.loading = false
+        // if (this.pageSize > data) {
+        //   this.finished = true
+        // }
       }
     },
-    onLoad() {
-      this.getComment()
+    // onLoad() {
+    //   this.getComment()
+    // },
+    async focus() {
+      this.isShowInput = false
+      await this.$nextTick()
+      this.$refs.textarea.focus()
+    },
+    blur() {
+      if (this.myComment) {
+        return
+      }
+      this.isShowInput = true
+      this.replynmae = ''
+    },
+    async add() {
+      await this.$nextTick()
+      const token = localStorage.getItem('token')
+      if (!token) {
+        localStorage.setItem('routeUrl', this.$route.path)
+        this.$router.push({
+          path: '/login'
+        })
+        return
+      }
+      const { data: res } = await this.$axios.post(`/post_comment/${this.$route.params.id}`, {
+        content: this.myComment,
+        parent_id: this.parent_id
+      })
+      const { statusCode, message } = res
+      if (statusCode === 200) {
+        this.getList()
+        this.getComment()
+        this.isShowInput = true
+        this.myComment = ''
+        this.$toast.success(message)
+      }
     }
   }
 }
@@ -275,43 +330,74 @@ video {
   }
 }
 .footer {
-  display: flex;
-  position: fixed;
-  height: 50px;
-  width: 100%;
-  margin-left: -15px;
-  padding: 0 15px;
-  background-color: #ccc;
-  bottom: 0;
-  align-items: center;
-  justify-content: space-between;
-  .write {
-    input {
-      width: 180px;
-      height: 30px;
-      border-radius: 15px;
-      font-size: 14px;
-      padding: 0 20px;
+  .input {
+    display: flex;
+    position: fixed;
+    height: 50px;
+    width: 100%;
+    margin-left: -15px;
+    padding: 0 15px;
+    background-color: #ccc;
+    bottom: 0;
+    align-items: center;
+    justify-content: space-between;
+    .write {
+      input {
+        width: 180px;
+        height: 30px;
+        border-radius: 15px;
+        font-size: 14px;
+        padding: 0 20px;
+      }
+    }
+    > span {
+      font-size: 25px;
+    }
+    .iconpinglun- {
+      position: relative;
+      > span {
+        position: absolute;
+        right: -20px;
+        top: -2px;
+        font-size: 12px;
+        padding: 0 10px;
+        background-color: #f00;
+        border-radius: 12px;
+        color: #fff;
+      }
+    }
+    .active {
+      color: red;
     }
   }
-  > span {
-    font-size: 25px;
-  }
-  .iconpinglun- {
-    position: relative;
-    > span {
-      position: absolute;
-      right: -20px;
-      top: -2px;
-      font-size: 12px;
-      padding: 0 10px;
+  .textarea {
+    display: flex;
+    position: fixed;
+    width: 100%;
+    padding: 20px 15px 10px;
+    margin-left: -15px;
+    background-color: #ccc;
+    bottom: 0;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    textarea {
+      width: 260px;
+      height: 90px;
+      border-radius: 15px;
+      padding: 10px;
+    }
+    span {
+      width: 60px;
+      height: 30px;
+      margin-bottom: -60px;
+      line-height: 30px;
+      border-radius: 15px;
+      text-align: center;
       background-color: #f00;
-      border-radius: 12px;
+      font-size: 12px;
       color: #fff;
     }
-  }
-  .active {
-    color: red;
   }
 }
 </style>
