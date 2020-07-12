@@ -4,23 +4,23 @@
       <span class="iconfont iconjiantou2" @click="$router.back()"></span>
       <span class="iconfont iconnew"></span>
       <div class="follow">
-        <span v-if="postList.has_follow===true" @click="cancel">已关注</span>
+        <span v-if="postList.has_follow === true" @click="cancel">已关注</span>
         <span @click="follow" v-else>关注</span>
       </div>
     </header>
     <div class="title">
-      <p>{{postList.title}}</p>
+      <p>{{ postList.title }}</p>
     </div>
     <div class="user">
-      <span>{{postList.user.nickname}}</span>
-      <span>{{postList.user.create_date | time}}</span>
+      <span>{{ postList.user.nickname }}</span>
+      <span>{{ postList.user.create_date | time }}</span>
     </div>
-    <div class="content" v-html="postList.content" v-if="postList.type===1"></div>
+    <div class="content" v-html="postList.content" v-if="postList.type === 1"></div>
     <video :src="postList.content" v-else controls loop></video>
     <div class="likeShare">
-      <div class="like" @click="like" :class="{active:postList.has_like}">
+      <div class="like" @click="like" :class="{ active: postList.has_like }">
         <span class="iconfont icondianzan"></span>
-        <span>{{postList.like_length}}</span>
+        <span>{{ postList.like_length }}</span>
       </div>
       <div class="weixin">
         <span class="iconfont iconweixin"></span>
@@ -37,7 +37,7 @@
         @load="onLoad"
         :immediate-check="false"
       >
-        <comment :comment="comment"></comment>
+        <comment :comment="item" v-for="item in comment" :key="item.key"></comment>
       </van-list>
     </div>
     <!-- 底部区域 -->
@@ -46,9 +46,9 @@
         <input type="text" placeholder="写跟贴" />
       </div>
       <span class="iconfont iconpinglun-">
-        <span>{{postList.comment_length}}</span>
+        <span>{{ postList.comment_length }}</span>
       </span>
-      <span class="iconfont iconshoucang" @click="star" :class="{active:postList.has_star}"></span>
+      <span class="iconfont iconshoucang" @click="star" :class="{ active: postList.has_star }"></span>
       <span class="iconfont iconfenxiang"></span>
     </footer>
   </div>
@@ -72,9 +72,18 @@ export default {
     this.getList()
     this.getComment()
   },
+  beforeDestroy() {
+    this.comment = []
+    this.pageIndex = 1
+    this.loading = true
+    this.finished = false
+    // console.log(this.comment)
+  },
   methods: {
     async getList() {
-      const { data: res } = await this.$axios.get(`/post/${this.$route.params.id}`)
+      const { data: res } = await this.$axios.get(
+        `/post/${this.$route.params.id}`
+      )
       const { statusCode, data } = res
       if (statusCode === 200) {
         this.postList = data
@@ -90,14 +99,18 @@ export default {
         })
         return
       }
-      const { data: res } = await this.$axios.get(`/user_follows/${this.postList.user.id}`)
+      const { data: res } = await this.$axios.get(
+        `/user_follows/${this.postList.user.id}`
+      )
       if (res.statusCode === 200) {
         this.$toast.success('关注成功')
         this.getList()
       }
     },
     async cancel() {
-      const { data: res } = await this.$axios.get(`/user_unfollow/${this.postList.user.id}`)
+      const { data: res } = await this.$axios.get(
+        `/user_unfollow/${this.postList.user.id}`
+      )
       if (res.statusCode === 200) {
         this.$toast.success('取消关注成功')
         this.getList()
@@ -112,7 +125,9 @@ export default {
         })
         return
       }
-      const { data: res } = await this.$axios.get(`/post_like/${this.postList.id}`)
+      const { data: res } = await this.$axios.get(
+        `/post_like/${this.postList.id}`
+      )
       if (res.statusCode === 200) {
         this.$toast.success(res.message)
         this.getList()
@@ -127,23 +142,30 @@ export default {
         })
         return
       }
-      const { data: res } = await this.$axios.get(`/post_star/${this.postList.id}`)
+      const { data: res } = await this.$axios.get(
+        `/post_star/${this.postList.id}`
+      )
       if (res.statusCode === 200) {
         this.$toast.success(res.message)
         this.getList()
       }
     },
     async getComment() {
-      const { data: res } = await this.$axios.get(`/post_comment/${this.$route.params.id}`, {
-        params: {
-          pageIndex: this.pageIndex,
-          pageSize: this.pageSize
+      const { data: res } = await this.$axios.get(
+        `/post_comment/${this.$route.params.id}`,
+        {
+          params: {
+            pageIndex: this.pageIndex,
+            pageSize: this.pageSize
+          }
         }
-      })
+      )
       const { statusCode, data } = res
       if (statusCode === 200) {
+        console.log(this.comment)
         // ----------------------------------------------------- 存在bug
         this.comment = [...this.comment, ...data]
+        // console.log(this.comment)
         this.pageIndex++
         this.loading = false
         if (this.pageSize > data) {

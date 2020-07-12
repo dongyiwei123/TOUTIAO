@@ -1,18 +1,18 @@
 <template>
   <div>
-    <div class="comment" v-for="item in comment" :key="item.id">
+    <div class="comment">
       <div class="title">
         <div class="avator">
-          <img src="../assets/03.jpg" alt />
+          <img :src="$url(comment.user.head_img)" alt />
         </div>
         <div class="user">
-          <p>{{item.user.nickname}}</p>
-          <p>{{item.create_date | fromNow}}</p>
+          <p>{{ comment.user.nickname }}</p>
+          <p>{{ comment.create_date | fromNow }}</p>
         </div>
         <span class="reply">回复</span>
       </div>
-      <myFloor v-if="item.parent" :comment="item.parent" :num="getNum(1,item.parent)"></myFloor>
-      <div class="content">{{item.content}}</div>
+      <myFloor v-if="comment.parent" :comment="comment.parent" :num="getNum(1, comment.parent)"></myFloor>
+      <div class="content">{{ comment.content }}</div>
     </div>
   </div>
 </template>
@@ -21,7 +21,7 @@
 import myFloor from './myFloor'
 export default {
   props: {
-    comment: Array
+    comment: Object
   },
   components: {
     myFloor
