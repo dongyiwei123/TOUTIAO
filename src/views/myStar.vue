@@ -1,7 +1,7 @@
 <template>
   <div class="myStar">
     <myHeader>我的收藏</myHeader>
-    <myNew :post="list" @click="getDetail"></myNew>
+    <myNew :post="item" @click="getDetail" v-for="item in list" :key="item.id"></myNew>
   </div>
 </template>
 

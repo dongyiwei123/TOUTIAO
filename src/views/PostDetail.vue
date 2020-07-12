@@ -30,15 +30,15 @@
     <!-- 评论区域 -->
     <div class="comment">
       <h3>精彩跟帖</h3>
-      <!-- <van-list
+      <van-list
         v-model="loading"
         :finished="finished"
         finished-text="没有更多了"
         @load="onLoad"
         :immediate-check="false"
-      >-->
-      <comment :comment="item" v-for="item in comment" :key="item.key"></comment>
-      <!-- </van-list> -->
+      >
+        <comment :comment="item" v-for="item in comment" :key="item.key"></comment>
+      </van-list>
     </div>
     <!-- 底部区域 -->
     <footer class="footer">
@@ -168,34 +168,34 @@ export default {
       }
     },
     async getComment() {
+      //   const { data: res } = await this.$axios.get(
+      //     `/post_comment/${this.$route.params.id}`)
       const { data: res } = await this.$axios.get(
-        `/post_comment/${this.$route.params.id}`)
-      // const { data: res } = await this.$axios.get(
-      //   `/post_comment/${this.$route.params.id}`,
-      //   {
-      //     params: {
-      //       pageIndex: this.pageIndex,
-      //       pageSize: this.pageSize
-      //     }
-      //   }
-      // )
+        `/post_comment/${this.$route.params.id}`,
+        {
+          params: {
+            pageIndex: this.pageIndex,
+            pageSize: this.pageSize
+          }
+        }
+      )
       const { statusCode, data } = res
       if (statusCode === 200) {
         // console.log(this.comment)
-        // this.comment = [...this.comment, ...data]
+        this.comment = [...this.comment, ...data]
         // this.comment = this.comment.concat(data)
-        this.comment = data
+        // this.comment = data
         // console.log(this.comment)
-        // this.pageIndex++
-        // this.loading = false
-        // if (this.pageSize > data) {
-        //   this.finished = true
-        // }
+        this.loading = false
+        if (this.pageSize > data) {
+          this.finished = true
+        }
       }
     },
-    // onLoad() {
-    //   this.getComment()
-    // },
+    onLoad() {
+      this.pageIndex++
+      this.getComment()
+    },
     async focus() {
       this.isShowInput = false
       await this.$nextTick()

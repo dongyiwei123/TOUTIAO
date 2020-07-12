@@ -1,41 +1,41 @@
 <template>
   <div class="myNew">
-    <div class="new" v-for="item in post" :key="item.id" @click="$emit('click',item.id)">
-      <div class="video" v-if="item.type === 2">
-        <p>{{ item.title }}</p>
+    <div class="new" @click="$emit('click',post.id)">
+      <div class="video" v-if="post.type === 2">
+        <p>{{ post.title }}</p>
         <div class="video_box">
-          <img :src="$url(item.cover[0].url)" alt />
+          <img :src="$url(post.cover[0].url)" alt />
           <span class="iconfont iconshipin"></span>
         </div>
         <div class="reply">
-          <span>{{ item.user.nickname }}</span>
-          <span>{{ item.comment_length }}跟帖</span>
+          <span>{{ post.user.nickname }}</span>
+          <span>{{ post.comment_length }}跟帖</span>
         </div>
       </div>
       <!-- 一张图 -->
-      <div class="singleStar" v-else-if="item.cover.length < 3">
+      <div class="singleStar" v-else-if="post.cover.length < 3">
         <div class="right">
-          <p>{{ item.title }}</p>
+          <p>{{ post.title }}</p>
           <div class="reply">
-            <span>{{ item.user.nickname }}</span>
-            <span>{{ item.comment_length }}跟帖</span>
+            <span>{{ post.user.nickname }}</span>
+            <span>{{ post.comment_length }}跟帖</span>
           </div>
         </div>
         <div class="left">
-          <img :src="$url(item.cover[0].url)" alt />
+          <img :src="$url(post.cover[0].url)" alt />
         </div>
       </div>
       <!-- 多张图 -->
       <div class="multipleStar" v-else>
-        <p>{{ item.title }}</p>
+        <p>{{ post.title }}</p>
         <div class="avator">
-          <img :src="$url(item.cover[0].url)" alt />
-          <img :src="$url(item.cover[1].url)" alt />
-          <img :src="$url(item.cover[2].url)" alt />
+          <img :src="$url(post.cover[0].url)" alt />
+          <img :src="$url(post.cover[1].url)" alt />
+          <img :src="$url(post.cover[2].url)" alt />
         </div>
         <div class="reply">
-          <span>{{ item.user.nickname }}</span>
-          <span>{{ item.comment_length }}跟帖</span>
+          <span>{{ post.user.nickname }}</span>
+          <span>{{ post.comment_length }}跟帖</span>
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@
 <script>
 export default {
   props: {
-    post: Array
+    post: Object
   }
 }
 </script>

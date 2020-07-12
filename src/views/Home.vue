@@ -25,7 +25,7 @@
               @load="onLoad"
               :immediate-check="false"
             >
-              <myNew :post="postList" @click="goDetail"></myNew>
+              <myNew :post="item" @click="goDetail" v-for="item in postList" :key="item.id"></myNew>
             </van-list>
           </van-pull-refresh>
         </van-tab>
@@ -52,9 +52,9 @@ export default {
   created() {
     this.getCategoryList()
   },
-  activated() {
-    this.getCategoryList()
-  },
+  // activated() {
+  //   this.getCategoryList()
+  // },
   methods: {
     async getCategoryList() {
       const active = JSON.parse(localStorage.getItem('active'))
