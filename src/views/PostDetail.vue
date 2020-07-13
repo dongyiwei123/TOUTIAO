@@ -81,22 +81,22 @@ export default {
   created() {
     this.getList()
     this.getComment()
-    this.$bus.$on('reply', (id, name) => {
+    this.$bus.$on('reply', this.replyFn)
+  },
+  beforeDestroy() {
+    this.comment = []
+    this.$bus.$off('reply', this.replyFn)
+  },
+  methods: {
+    async replyFn(id, name) {
       this.parent_id = id
       this.replynmae = name
       this.isShowInput = false
       this.myComment = ''
-      this.$nextTick().then(() => { this.$refs.textarea.focus() }).catch(err => err)
-    })
-  },
-  beforeDestroy() {
-    this.comment = []
-    // this.pageIndex = 1
-    // this.loading = true
-    // this.finished = false
-    // console.log(this.comment)
-  },
-  methods: {
+      // this.$nextTick().then(() => { this.$refs.textarea.focus() }).catch(err => err)
+      await this.$nextTick()
+      this.$refs.textarea.focus()
+    },
     async getList() {
       const { data: res } = await this.$axios.get(
         `/post/${this.$route.params.id}`

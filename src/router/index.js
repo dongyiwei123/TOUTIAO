@@ -11,57 +11,65 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/Home.vue')
+    component: () => import(/* webpackChunkName: "home" */ '../views/Home.vue')
   },
   {
     path: '/Login',
     name: 'Login',
-    component: () => import('../views/login.vue')
+    component: () => import(/* webpackChunkName: "user" */ '../views/login.vue')
   },
   {
     path: '/Register',
     name: 'Register',
-    component: () => import('../views/register.vue')
+    component: () =>
+      import(/* webpackChunkName: "user" */ '../views/register.vue')
   },
   {
     path: '/User',
     name: 'User',
-    component: () => import('../views/user.vue')
+    component: () => import(/* webpackChunkName: "user" */ '../views/user.vue')
   },
   {
     path: '/UserEdit',
     name: 'UserEdit',
-    component: () => import('../views/userEdit.vue')
+    component: () =>
+      import(/* webpackChunkName: "user" */ '../views/userEdit.vue')
   },
   {
     path: '/myFollow',
     name: 'myFollow',
-    component: () => import('../views/myFollow.vue')
+    component: () =>
+      import(/* webpackChunkName: "user" */ '../views/myFollow.vue')
   },
   {
     path: '/myComment',
     name: 'myComment',
-    component: () => import('../views/myComment.vue')
+    component: () =>
+      import(/* webpackChunkName: "user" */ '../views/myComment.vue')
   },
   {
     path: '/myStar',
     name: 'myStar',
-    component: () => import('../views/myStar.vue')
+    component: () =>
+      import(/* webpackChunkName: "user" */ '../views/myStar.vue')
   },
   {
     path: '/postDetail/:id',
     name: 'postDetail',
-    component: () => import('../views/PostDetail.vue')
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/PostDetail.vue')
   },
   {
     path: '/search',
     name: 'search',
-    component: () => import('../views/Search.vue')
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/Search.vue')
   },
   {
     path: '/category',
     name: 'category',
-    component: () => import('../views/Category.vue')
+    component: () =>
+      import(/* webpackChunkName: "home" */ '../views/Category.vue')
   }
 ]
 

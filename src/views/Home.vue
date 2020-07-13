@@ -161,7 +161,7 @@ export default {
       }
     }
   }
-  .van-tabs__wrap {
+  /deep/.van-tabs__wrap {
     width: 90%;
   }
   .category {
@@ -170,14 +170,14 @@ export default {
     }
     .iconicon-test {
       float: right;
-      width: 50px;
+      width: 10%;
       height: 44px;
       position: sticky;
       top: 0;
       text-align: center;
       line-height: 44px;
       background-color: #fff;
-      z-index: 9999;
+      z-index: 999;
     }
   }
 }

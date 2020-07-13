@@ -73,6 +73,8 @@ Vue.prototype.$bus = bus
 // axios优化
 Vue.prototype.$axios = axios
 axios.defaults.baseURL = 'http://127.0.0.1:3000'
+// axios.defaults.baseURL = '/api'
+
 // 图片链接
 Vue.prototype.$url = function(url) {
   if (url.startsWith('http')) {
