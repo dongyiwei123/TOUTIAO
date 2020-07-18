@@ -13,8 +13,10 @@
       </div>
     </header>
     <!-- tab栏 -->
-    <nav class="category">
+    <van-sticky>
       <span class="iconfont iconicon-test" @click="$router.push('/category')"></span>
+    </van-sticky>
+    <nav class="category">
       <van-tabs v-model="active" sticky animated swipeable>
         <van-tab :title="item.name" v-for="item in categoryList" :key="item.id">
           <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
@@ -117,6 +119,12 @@ export default {
       const id = this.categoryList[value].id
       this.getPostList(id)
     }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (to.name !== 'postDetail') {
+      this.$store.commit('del', { name: 'home' })
+    }
+    next()
   }
 }
 </script>
@@ -161,24 +169,24 @@ export default {
       }
     }
   }
-  /deep/.van-tabs__wrap {
+  /deep/ .van-tabs .van-sticky {
     width: 90%;
   }
   .category {
+    position: relative;
     /deep/ .van-tabs__line {
       background-color: pink;
     }
-    .iconicon-test {
-      float: right;
-      width: 10%;
-      height: 44px;
-      position: sticky;
-      top: 0;
-      text-align: center;
-      line-height: 44px;
-      background-color: #fff;
-      z-index: 999;
-    }
+  }
+  .iconicon-test {
+    position: absolute;
+    width: 10%;
+    height: 44px;
+    right: 0;
+    text-align: center;
+    line-height: 44px;
+    background-color: #fff;
+    z-index: 999;
   }
 }
 </style>

@@ -232,12 +232,12 @@ export default {
     right: 0;
     top: 0;
     bottom: 0;
-    z-index: 2;
+    z-index: 666;
     .van-icon {
       position: absolute;
       color: #000;
       font-size: 30px;
-      z-index: 999;
+      z-index: 99999;
       &:nth-child(1) {
         left: 0;
       }

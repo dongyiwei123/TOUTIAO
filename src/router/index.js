@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-
+import store from '../store'
 Vue.use(VueRouter)
 // 防止点击登录按钮报错
 const VueRouterPush = VueRouter.prototype.push
@@ -80,6 +80,10 @@ const pages = ['/user', '/userEdit', '/myFollow', '/myComment', '/myStar']
 router.beforeEach((to, from, next) => {
   const token = window.localStorage.getItem('token')
   // console.log(token)
+  console.log(to.path)
+  if (to.path === '/') {
+    store.commit('add', { name: 'home' })
+  }
   if (pages.includes(to.path)) {
     if (token) {
       next()

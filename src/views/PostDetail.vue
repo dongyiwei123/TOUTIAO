@@ -30,15 +30,17 @@
     <!-- 评论区域 -->
     <div class="comment">
       <h3>精彩跟帖</h3>
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
-        :immediate-check="false"
-      >
-        <comment :comment="item" v-for="item in comment" :key="item.key"></comment>
-      </van-list>
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          finished-text="没有更多了"
+          @load="onLoad"
+          :immediate-check="false"
+        >
+          <comment :comment="item" v-for="item in comment" :key="item.key"></comment>
+        </van-list>
+      </van-pull-refresh>
     </div>
     <!-- 底部区域 -->
     <footer class="footer">
@@ -75,7 +77,8 @@ export default {
       isShowInput: true,
       myComment: '',
       parent_id: '',
-      replynmae: ''
+      replynmae: '',
+      refreshing: false
     }
   },
   created() {
@@ -184,9 +187,9 @@ export default {
         // console.log(this.comment)
         this.comment = [...this.comment, ...data]
         // this.comment = this.comment.concat(data)
-        // this.comment = data
         // console.log(this.comment)
         this.loading = false
+        this.refreshing = false
         if (this.pageSize > data) {
           this.finished = true
         }
@@ -224,12 +227,19 @@ export default {
       })
       const { statusCode, message } = res
       if (statusCode === 200) {
+        await this.$nextTick()
         this.getList()
-        this.getComment()
         this.isShowInput = true
         this.myComment = ''
         this.$toast.success(message)
       }
+    },
+    onRefresh() {
+      this.pageIndex = 1
+      this.comment = []
+      this.loading = true
+      this.finished = false
+      this.getComment()
     }
   }
 }

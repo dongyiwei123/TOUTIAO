@@ -15,6 +15,7 @@ import myHeader from './components/myHeader.vue'
 import navBar from './components/navBar.vue'
 import myNew from './components/myNew.vue'
 import comment from './components/comment.vue'
+import store from './store'
 import {
   Field,
   Button,
@@ -107,6 +108,7 @@ axios.interceptors.response.use(function(res) {
 
 new Vue({
   router,
+  store,
   render: h => h(App)
   // component: {
   //   myHeader
